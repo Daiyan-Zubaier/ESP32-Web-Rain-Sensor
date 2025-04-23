@@ -1,0 +1,14 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "c:\\esp\\esp-idf",
+    "idf.pythonInstallPath": "c:\\esp\\tools\\tools\\idf-python\\3.11.2\\python.exe",
+    "idf.openOcdConfigs": [
+        "board/esp32-wrover-kit-3.3v.cfg"
+    ],
+    "idf.toolsPathWin": "c:\\esp\\tools",
+    "files.associations": {
+        "esp_wifi.h": "c",
+        "esp_adc_cal.h": "c",
+        "adc.h": "c"
+    }
+}

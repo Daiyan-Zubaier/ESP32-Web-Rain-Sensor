@@ -1,9 +1,10 @@
 idf_component_register(
-  SRCS
-    "src/app_main.c"
-    "src/wifi_manager.c"
-    "src/sensor_task.c"
-    "src/web_server.c"
-  INCLUDE_DIRS
-    "incs"
+    SRCS
+        "src/app_main.c"
+        "src/shared.c"          
+        "src/wifi_manager.c"
+        "src/sensor_task.c"
+        "src/web_server.c"
+    INCLUDE_DIRS
+        "incs"
 )

@@ -9,6 +9,7 @@
     "files.associations": {
         "esp_wifi.h": "c",
         "esp_adc_cal.h": "c",
-        "adc.h": "c"
+        "adc.h": "c",
+        "cjson.h": "c"
     }
 }

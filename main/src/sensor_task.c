@@ -20,8 +20,8 @@ static void adc_setup(void){
 void sensor_task(void *pv){
     esp_adc_cal_characteristics_t *adc_chars = calloc(1, sizeof(esp_adc_cal_characteristics_t));
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, 1100, adc_chars); /* callibration */
-    printf(val_type);
-    
+    //printf(val_type);
+
     while(1){
         /* Reading raw adc values then converting it to milivolts */
         uint32_t raw = adc1_get_raw(SENSOR_ADC_CHANNEL);

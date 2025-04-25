@@ -5,6 +5,7 @@
 #include "esp_log.h"
 
 #include "cJSON.h"
+#include <stdio.h>  
 
 static const char *TAG = "web";
 
@@ -20,7 +21,7 @@ static esp_err_t api_rain_handler(httpd_req_t *req){
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
 
     /* Send JSON Response */
-    httpd_resp_set_type(req, "application/JSON"); /* Response will be JSON not HTML */
+    httpd_resp_set_type(req, "application/json"); /* Response will be JSON not HTML */
     esp_err_t ret = httpd_resp_send(req, json, HTTPD_RESP_USE_STRLEN); /* HTTPD_RESP_USE_STRLEN does strlen(json) */
 
     free(json); 

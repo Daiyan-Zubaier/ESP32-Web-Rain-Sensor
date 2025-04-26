@@ -1,68 +1,176 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background: 220 20% 97%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 252 56% 57%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 252 56% 57%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 252 56% 57%;
+
+    --radius: 0.5rem;
+
+    --rain-gradient-start: 220 83% 65%;
+    --rain-gradient-end: 252 56% 57%;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 240 10% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 240 10% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 252 56% 57%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 252 56% 57%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 252 56% 57%;
+
+    --rain-gradient-start: 240 60% 20%;
+    --rain-gradient-end: 252 56% 57%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground min-h-screen;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  @font-face {
+    font-family: 'Display';
+    src: local('Georgia'), local('Cambria'), local('Times New Roman');
+    font-weight: bold;
+  }
+
+  .font-display {
+    font-family: 'Display', Georgia, serif;
+    letter-spacing: -0.025em;
+  }
+
+  /* Background transition */
+  .bg-transition {
+    transition: background-color 2s ease-in-out, background-image 2s ease-in-out;
+  }
+
+  /* Custom styles for our rain app */
+  .rain-section {
+    @apply min-h-screen w-full flex flex-col justify-center items-center p-4 md:p-8 lg:p-12 snap-start;
+  }
+
+  .rain-card {
+    @apply bg-card/80 backdrop-blur-lg border border-border rounded-xl shadow-lg p-6 w-full max-w-md mx-auto transition-all duration-300;
+  }
+  
+  .liquid-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .liquid-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, hsl(var(--rain-gradient-start)), hsl(var(--rain-gradient-end)));
+    border-radius: 50% 50% 0 0 / 10% 10% 0 0;
+    transition: height 1s ease-out;
+  }
+
+  .liquid-fill::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: hsl(var(--rain-gradient-end));
+    filter: blur(3px);
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-primary to-accent;
+  }
+
+  .scroll-snap-container {
+    @apply snap-y snap-mandatory overflow-y-auto h-screen;
+    scroll-behavior: smooth;
+  }
+
+  .animate-stagger-1 { animation-delay: 0.1s; }
+  .animate-stagger-2 { animation-delay: 0.2s; }
+  .animate-stagger-3 { animation-delay: 0.3s; }
+  .animate-stagger-4 { animation-delay: 0.4s; }
+  .animate-stagger-5 { animation-delay: 0.5s; }
+
+  /* Cloud animation */
+  @keyframes float {
+    0%, 100% {
+      transform: translateX(0) translateY(0);
+    }
+    25% {
+      transform: translateX(20px) translateY(-10px);
+    }
+    50% {
+      transform: translateX(40px) translateY(0);
+    }
+    75% {
+      transform: translateX(20px) translateY(10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 20s ease-in-out infinite;
+  }
+
+  /* Fix for animation performance */
+  .animate-float {
+    will-change: transform;
   }
 }

@@ -21,3 +21,4 @@
 /web-code/rain-sense/*.njsproj
 /web-code/rain-sense/*.sln
 /web-code/rain-sense/*.sw?
+/web-code/rain-sense/.env

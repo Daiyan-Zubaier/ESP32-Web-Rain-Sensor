@@ -1,53 +1,98 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 | Linux |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- | -------- | -------- | ----- |
+# ESP32 Rain Status 🌧️
 
-# Hello World Example
+Live-updating rain-sensor dashboard powered by an **ESP32 + FreeRTOS** back-end and a **React / Vite / Tailwind** front-end.  
+Shows current moisture %, a liquid-fill gauge, and a rolling spark-line — refreshed every 5 s.
 
-Starts a FreeRTOS task to print "Hello World".
+---
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## 1  Hardware
 
-## How to use example
+| Part | Notes |
+|------|-------|
+| **ESP32 DevKit-C** | Any ESP32-WROOM / WROVER board |
+| **MH-RD (YL-83) rain-sensor kit** | Detector plate + LM393 board |
+| 3 × Dupont jumpers | VCC → 3 V3 · GND → GND · AO → GPIO 34 |
+| *optional* Raspberry Pi / always-on PC | Runs **cloudflared** for a permanent public URL |
 
-Follow detailed instructions provided specifically for this example.
+---
 
-Select the instructions depending on Espressif chip installed on your development board:
+## 2  Firmware (ESP-IDF v5+)
 
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
-
-
-## Example folder contents
-
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both).
-
-Below is short explanation of remaining files in the project folder.
-
-```
-├── CMakeLists.txt
-├── pytest_hello_world.py      Python script used for automated testing
-├── main
-│   ├── CMakeLists.txt
-│   └── hello_world_main.c
-└── README.md                  This is the file you are currently reading
+```bash
+idf.py set-target esp32
+idf.py menuconfig                 # Component → HTTP Server → Max header = 4096
+idf.py build flash monitor
 ```
 
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
+* REST endpoint `GET /api/rain → {"rain": 83.1}`  
+  (CORS header `Access-Control-Allow-Origin: *`)
 
-## Troubleshooting
+---
 
-* Program upload failure
+## 3  Making the ESP32 public
 
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
+### Quick Tunnel (instant URL)
 
-## Technical support and feedback
+```bash
+cloudflared tunnel --url http://192.168.2.211:80
+# prints e.g. https://happy-fox-abcd1234.trycloudflare.com
+```
 
-Please use the following feedback channels:
+Use that address during prototyping.
 
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
+### Named Tunnel (stable URL)
 
-We will get back to you as soon as possible.
+```bash
+cloudflared tunnel login             # one-time auth
+cloudflared tunnel create rain-tunnel
+cloudflared tunnel run rain-tunnel   # URL: https://<UUID>.cfargotunnel.com
+```
+
+---
+
+## 4  Front-end (React / Vite)
+
+### Tech stack
+* React 18 + Vite  
+* Tailwind CSS 3  
+* Framer Motion animations  
+* Recharts spark-line  
+
+### Dev proxy & env vars
+
+* **Dev** (`npm run dev`) → Vite proxies `/api/*` to the tunnel host.  
+* **Prod** (Vercel) → set `VITE_API_BASE` in project settings.
+
+```bash
+# .env  (optional for local dev)
+VITE_API_BASE=https://happy-fox-abcd1234.trycloudflare.com
+```
+
+```bash
+cd rain-ui
+npm install
+npm run dev          # http://localhost:8080
+```
+
+---
+
+## 5  Deploy to Vercel 🚀
+
+1. Push **rain-ui/** to GitHub.  
+2. **Vercel → New Project → Import Repo**.  
+3. **Settings → Environment Variables**  
+   * `VITE_API_BASE = https://<your-tunnel>`  
+4. Click **Deploy** → site lives at  
+   `https://<project>.vercel.app`
+
+---
+
+## 6  Features
+
+* Live liquid-fill gauge with smooth animation  
+* Rolling spark-line (last 10 readings)  
+* Auto-refresh every 5 s; mock fallback after 3 failures  
+* Dark / light toggle (Tailwind `dark` mode)  
+* Responsive 320 px → 1440 px  
+* Zero back-end in production — front-end fetches the ESP32 directly
+

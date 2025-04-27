@@ -1,7 +1,10 @@
 # ESP32 Rain Status 🌧️
 
 Live-updating rain-sensor dashboard powered by an **ESP32 + FreeRTOS** back-end and a **React / Vite / Tailwind** front-end.  
-Shows current moisture %, a liquid-fill gauge, and a rolling spark-line — refreshed every 5 s.
+Shows current moisture %, a liquid-fill gauge, and a rolling spark-line — refreshed every 5 s. 
+
+Check it out at:
+https://esp-32-web-rain-sensor.vercel.app/ 
 
 ---
 
